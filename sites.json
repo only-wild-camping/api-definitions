@@ -1,0 +1,434 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Only Wild Camping - Sites",
+    "description": "This is the API concerned with information about the sites available.",
+    "version": "1.0.0"
+  },
+  "host": "api.onlywildcamping.com",
+  "schemes": ["https"],
+  "basePath": "/sites",
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Get locations",
+        "description": "The Locations endpoint returns an array of locations that are within the filter parameters, if they exist. The locations are provided as an ordered array, where the ordering is distance from the centre-point of the filtering box.",
+        "parameters": [
+          {
+            "name": "north_east_latitude",
+            "in": "query",
+            "description": "Latitude component of the North East corner of the bounding box.",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "north_east_longitude",
+            "in": "query",
+            "description": "Longitude component of the North East corner of the bounding box.",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "south_west_latitude",
+            "in": "query",
+            "description": "Latitude component of the South West corner of the bounding box.",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "south_west_longitude",
+            "in": "query",
+            "description": "Longitude component of the South West corner of the bounding box.",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "required_attributes",
+            "in": "query",
+            "description": "An array of programmatic attribute-names.",
+            "required": false,
+            "type": "array",
+  		    "items": {
+			  "type": "string"
+            }
+          }
+        ],
+        "tags": ["Location"],
+        "responses": {
+          "200": {
+            "description": "An array of locations",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Location"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "uri" : "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:971719831950:function:api-sites-collection/invocations",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "requestParameters" : {
+            "integration.request.header.request_type" : "'GET'"
+          },
+          "requestTemplates" : {
+            "application/json" : "{\"body\": $input.json('$'), \"context\": {\"http-method\": \"$context.httpMethod\", \"source-ip\": \"$context.identity.sourceIp\"}}"
+          },
+          "passthroughBehavior" : "when_no_templates",
+          "httpMethod" : "POST",
+          "contentHandling" : "CONVERT_TO_TEXT",
+          "type" : "aws"
+        }
+      },
+      "post": {
+        "summary": "Create a location",
+        "description": "The Location PUT endpoint takes a human-readable name for a location and coordinates, then, if successful, returns a programmatic name or, if unsuccessful, returns potential collision-locations.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of new location.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "Latitude of new location.",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "Longitude of new location.",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          },
+		      {
+            "name": "typeURN",
+            "in": "query",
+            "description": "Type of new location.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": ["Location"],
+        "responses": {
+          "200": {
+            "description": "New Location.",
+            "schema": {
+              "$ref": "#/definitions/Location"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "uri" : "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:971719831950:function:api-sites-collection/invocations",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "requestParameters" : {
+            "integration.request.header.request_type" : "'GET'"
+          },
+          "requestTemplates" : {
+            "application/json" : "{\"body\": $input.json('$'), \"context\": {\"http-method\": \"$context.httpMethod\", \"source-ip\": \"$context.identity.sourceIp\"}}"
+          },
+          "passthroughBehavior" : "when_no_templates",
+          "httpMethod" : "POST",
+          "contentHandling" : "CONVERT_TO_TEXT",
+          "type" : "aws"
+        }
+      }
+    },
+    "/{urn}": {
+      "get": {
+        "summary": "Get the location with the URN 'urn'",
+        "description": "The Location endpoint returns details about a location, the information is returned as a JSON object.",
+        "parameters": [
+          {
+            "name": "urn",
+            "in": "path",
+            "description": "The unique name of the location.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": ["Location"],
+        "responses": {
+          "200": {
+            "description": "A JSON object containing the information of a specific location.",
+            "schema": {
+              "$ref": "#/definitions/Location"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "passthroughBehavior" : "when_no_match",
+          "type" : "mock"
+        }
+      },
+      "put": {
+        "summary": "Replace the location with the URN 'urn'",
+        "description": "The Location PUT endpoint replaces the details of a location with the information in the request body.",
+        "parameters": [
+          {
+            "name": "urn",
+            "in": "path",
+            "description": "The programmatic name of the location.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The updated name to be recorded in the data store.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "description": "The updated description to be recorded in the data store.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "capacity",
+            "in": "query",
+            "description": "The updated capacity to be recorded in the data store.",
+            "required": false,
+            "type": "number",
+            "format": "int"
+          },          
+          {
+            "name": "image",
+            "in": "query",
+            "description": "The updated image URL to be recorded in the data store.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "The updated latitude to be recorded in the data store.",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "The updated longitude to be recorded in the data store.",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          }
+        ],
+        "tags": ["Location"],
+        "responses": {
+          "200": {
+            "description": "Replaced location",
+            "schema": {
+              "$ref": "#/definitions/Location"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "passthroughBehavior" : "when_no_match",
+          "type" : "mock"
+        }
+      },
+      "patch": {
+        "summary": "Update the location with the URN 'urn'",
+        "description": "This endpoint updates the details of a specific location, the response is the updated member object.",
+        "parameters": [
+          {
+            "name": "urn",
+            "in": "path",
+            "description": "The unique name of the location.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The updated name to be recorded in the data store.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "description": "The updated description to be recorded in the data store.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "capacity",
+            "in": "query",
+            "description": "The updated capacity to be recorded in the data store.",
+            "required": false,
+            "type": "number",
+            "format": "int"
+          },          
+          {
+            "name": "image",
+            "in": "query",
+            "description": "The updated image URL to be recorded in the data store.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "The updated latitude to be recorded in the data store.",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "The updated longitude to be recorded in the data store.",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "attributes",
+            "in": "query",
+            "description": "The updated attributes to be recorded in the data store.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": ["Location"],
+        "responses": {
+          "200": {
+            "description": "Updated location",
+            "schema": {
+              "$ref": "#/definitions/Location"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "passthroughBehavior" : "when_no_match",
+          "type" : "mock"
+        }
+      },
+      "delete": {
+        "summary": "Deletes the location with the URN 'urn'",
+        "description": "This endpoint DELETEs a location, the response body is empty.",
+        "parameters": [
+          {
+            "name": "urn",
+            "in": "path",
+            "description": "The unique name of the location.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": ["Location"],
+        "responses": {
+          "204": {
+            "description": "Successful response to a DELETE request: 204 code and an empty body."
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "204"
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 204}"
+          },
+          "passthroughBehavior" : "when_no_match",
+          "type" : "mock"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Location": {
+      "properties": {
+        "urn": {
+          "type": "string",
+          "description": "Unique identifier representing a specific location."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of location."
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of location."
+        },
+        "capacity": {
+          "type": "number",
+          "format": "int",
+          "description": "Capacity of location. For example, 4 people."
+        },
+        "image": {
+          "type": "string",
+          "description": "A URL representing the primary image of the location."
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double",
+          "description": "The latitude of the location."
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double",
+          "description": "The longitude of the location."
+        },
+		    "typeURN": {
+          "type": "string",
+          "description": "A URN representing the type."
+        }
+      }
+    }
+  }
+}
