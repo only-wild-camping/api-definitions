@@ -1,0 +1,312 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Only Wild Camping - Attributes",
+    "description": "This is the API concerned with information about the site attributes available.",
+    "version": "1.0.0"
+  },
+  "host": "api.onlywildcamping.com",
+  "schemes": ["https"],
+  "basePath": "/attributes",
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Get attributes",
+        "description": "",
+        "parameters": [
+          {
+            "name": "like",
+            "in": "query",
+            "description": "An array of attributes that have some likeness to 'like'. E.g. if 'like'='water' the attributes returned may be ['lake', 'fishing', 'river'].",
+            "required": false,
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+          }
+        ],
+        "tags": ["Attribute"],
+        "responses": {
+          "200": {
+            "description": "An array of attributes",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Attribute"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+            "responses" : {
+                "default" : {
+                    "statusCode" : "200",
+                    "body": "Hello from the mock integration!"
+                }
+            },
+            "requestTemplates" : {
+                "application/json" : "{\"statusCode\": 200}"
+            },
+            "passthroughBehavior" : "when_no_match",
+            "type" : "mock"
+        }
+      },
+      "post": {
+        "summary": "Create an attribute",
+        "description": "",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "description": "A description of the attribute",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "in": "query",
+            "description": "An image of the attribute",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": ["Attribute"],
+        "responses": {
+          "200": {
+            "description": "New attribute.",
+            "schema": {
+              "$ref": "#/definitions/Attribute"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+            "responses" : {
+                "default" : {
+                    "statusCode" : "200",
+                    "body": "Hello from the mock integration!"
+                }
+            },
+            "requestTemplates" : {
+                "application/json" : "{\"statusCode\": 200}"
+            },
+            "passthroughBehavior" : "when_no_match",
+            "type" : "mock"
+        }
+      }
+    },
+    "/{urn}": {
+      "get": {
+        "summary": "Get the attribute with the URN 'urn'",
+        "description": "This endpoint returns details about an attribute, the information is returned as a JSON object.",
+        "parameters": [
+          {
+            "name": "urn",
+            "in": "path",
+            "description": "The URN of the attribute.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": ["Attribute"],
+        "responses": {
+          "200": {
+            "description": "A JSON object containing the information of a specific attribute.",
+            "schema": {
+              "$ref": "#/definitions/Attribute"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "body": "Hello from the mock integration!"
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "passthroughBehavior" : "when_no_match",
+          "type" : "mock"
+        }
+      },
+      "put": {
+        "summary": "Replace the attribute with the URN 'urn'",
+        "description": "The Location PUT endpoint replaces the details of a location with the information in the request body.",
+        "parameters": [
+          {
+            "name": "urn",
+            "in": "path",
+            "description": "The programmatic name of the location.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The updated name to be recorded in the data store.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "description": "The updated description to be recorded in the data store.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "in": "query",
+            "description": "The updated image URL to be recorded in the data store.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": ["Attribute"],
+        "responses": {
+          "200": {
+            "description": "Replaced attribute",
+            "schema": {
+              "$ref": "#/definitions/Attribute"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "body": "Hello from the mock integration!"
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "passthroughBehavior" : "when_no_match",
+          "type" : "mock"
+        }
+      },
+      "patch": {
+        "summary": "Update the attribute with the URN 'urn'",
+        "description": "This endpoint updates the details of a specific attribute, the response is the updated member object.",
+        "parameters": [
+          {
+            "name": "urn",
+            "in": "path",
+            "description": "The unique name of the location.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The updated name to be recorded in the data store.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "description": "The updated description to be recorded in the data store.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "in": "query",
+            "description": "The updated image URL to be recorded in the data store.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": ["Attribute"],
+        "responses": {
+          "200": {
+            "description": "Updated attribute",
+            "schema": {
+              "$ref": "#/definitions/Attribute"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "passthroughBehavior" : "when_no_match",
+          "type" : "mock"
+        }
+      },
+      "delete": {
+        "summary": "Deletes the attributre with the URN 'urn'",
+        "description": "This endpoint DELETEs a attribute, the response body is empty.",
+        "parameters": [
+          {
+            "name": "urn",
+            "in": "path",
+            "description": "The URN of the attribute.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": ["Attribute"],
+        "responses": {
+          "204": {
+            "description": "Successful response to a DELETE request: 204 code and an empty body."
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "204"
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 204}"
+          },
+          "passthroughBehavior" : "when_no_match",
+          "type" : "mock"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Attribute": {
+      "properties": {
+        "urn": {
+          "type": "string",
+          "description": "Unique identifier representing a specific location."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of location."
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of location."
+        },
+        "image": {
+          "type": "string",
+          "description": "A URL representing the image of the attribute."
+        },
+        "like": {
+            "type": "string",
+            "description": "An optional string returned when the 'like' paramater is used in the query."
+        }
+      }
+    }
+  }
+}
